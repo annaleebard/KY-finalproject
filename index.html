@@ -200,9 +200,9 @@
                 });
             
                 // bind a popup to layer with county-specific information
-                layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" </b></br>" +
-                                labels[attribute] + ": " + ((layer.feature.properties[attribute]/
-                                        layer.feature.properties[norm])*100).toLocaleString());
+//                layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" </b></br>" +
+//                                labels[attribute] + ": " + ((layer.feature.properties[attribute]/
+//                                        layer.feature.properties[norm])*100).toLocaleString());
 
                 // on mousing over layer
                 layer.on('mouseover', function() {
@@ -234,7 +234,7 @@
             });
             
             // update the legend with the current data attribute information
-            updateLegend(breaks);
+            //updateLegend(breaks);
             
         }
         
@@ -247,8 +247,9 @@
             dataLayer.eachLayer(function(layer) {
                 props = layer.feature.properties
                 console.log(props);
+                if(layer.feature.properties[norm] == 0) layer.feature.properties[norm] = 1
                 var value = layer.feature.properties[attribute]/layer.feature.properties[norm];
-                values.push(value);   // push the normalized value for each layer into the Array
+                values.push(+value);   // push the normalized value for each layer into the Array
                 
             }); 
             
