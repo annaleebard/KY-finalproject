@@ -25,20 +25,26 @@
             padding: 6px 10%;
         }
         h1 {
-            display: inline-block;
-            margin-right: 20px;
-            color: #001323;
+            position: absolute;
+            z-index: 100;
+            top:20px;
+            left: 65px;
+            padding: 8px 15px;
+            margin: 0;
+            color: whitesmoke;
+            fontsize: 2em;
+            background:rgba(25,25,25,0.8);
+            border-radius:5px;
         }
         h2 {
             display: inline-block;
             color: #001323;
         }
         #map {
-            width: 960px;
-            height: 540px;
-            margin: 10px auto;
-            background: whitesmoke;
-            border: 2px solid #dddedf;
+            position:  absolute;
+            width: 100%;
+            top: 0;
+            bottom: 0;
         }
         footer {
             padding: 6px 10%;
@@ -102,9 +108,10 @@
 
 <body>
     <header>
-        <h1>ky</h1>
-        <h2>Map Subtitle</h2>
+        <h1>All Things Kentucky</h1>
+        <h2>/h2>
     </header>
+<!--
     <div id='ui-controls'>
      <label>Choose a data attribute:<br>
         <select name="occupied">
@@ -114,21 +121,32 @@
         </select>
         </label>
     </div>
+-->
     <div id='map'></div>
     <script>
         
-        // initial map options, disabling pan/zoom
-        var options = {
-            center: [38.2, -85.8],
-            zoom: 4,
-            minZoom: 0,
-            maxZoom: 20,
-            dragging: false,
-            zoomControl: false
-        }
         
-        // create Leaflet map and apply options
+        // initial map options, disabling pan/zoom
+       var options = {
+            center: [38.2, -94],
+            zoom: 4,
+            minZoom: 4,
+            maxZoom: 6,
+            dragging: true,
+            zoomControl: true
+        }
         var map = L.map('map', options);
+        
+      var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 18
+});
+      // load map tiles and add to map
+      map.addLayer(tiles); 
+        
+       
         
         // set global variables for map layer, 
         // mapped attribute, and normalizing attribute
@@ -137,11 +155,11 @@
             norm = "norm";
         
         // create object to hold legend titles
-        var labels = {
-            "OWNED_MORT": "% occupied housing units owned with mortgage",
-            "OWNED_FREE": "% occupied housing units owned free and clear",
-            "RENTER": "% occupied housing units rented"   
-        }
+//        var labels = {
+//            "OWNED_MORT": "% occupied housing units owned with mortgage",
+//            "OWNED_FREE": "% occupied housing units owned free and clear",
+//            "RENTER": "% occupied housing units rented"   
+//        }
         
         // AJAX call to load hexbin-level data
         $.getJSON("hexKY.json", function(data) {
@@ -152,9 +170,9 @@
                     // style counties with initial default path options
                     return {
                             color: '#dddddd',
-                            weight: 2,
+                            weight: .5,
                             fillOpacity: .5,
-                            fillColor: '#1f78b4'
+                            fillColor: '#gray'
                         };
                 }          
             }).addTo(map);
