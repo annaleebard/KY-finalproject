@@ -56,13 +56,13 @@
             
         }
         .legend {
-            padding: 6px 8px;
+            padding: 3px 3px;
             font-size: 1em;
             color: whitesmoke;
             background:rgba(25,25,25,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            width: 160px;
+            border-radius: 10px;
+            width: 300px;
         }
         .legend h3 {
             font-size: 1.1em;
@@ -73,21 +73,24 @@
         }
         .legend li {
             list-style-type: none;
-            height: 22px;
+            display: inline;
+            height: 20px;
         }
         .legend span {
-            width: 10px;
-            height: 10px;
+            width: 60px;
+            height: 20px;
             float: left;
-            margin-right: 10px;
+            //margin-right: 10px;
         }
         #ui-controls  {
+            
             position: absolute;
-            bottom: 170px;
+            bottom: 80px;
+            right: 10px;
             z-index: 100;
-            float:right;
-            padding: 8px 15px;
-            margin: 0;
+            float:left;
+            padding: 3px 3px;
+            margin: 1px;
             color: whitesmoke;
             fontsize: 2em;
             background:rgba(25,25,25,0.8);
@@ -124,10 +127,15 @@
     </header>
     <div id='ui-controls'>
      <label>Choose a data attribute:<br>
-        <select name="occupied">
-            <option value="bourbon" selected>tweets containing bourbon</option>
-            <option value="kentucky">tweets containing kentucky</option> 
-            <option value="bluegrass">twees containing bluegrass</option>
+        <select name="bourbon">
+            <option value="bourbon" selected>tweets containing "bourbon"</option>
+            <option value="kentucky">tweets containing "Kentucky"</option> 
+            <option value="bluegrass">tweets containing "bluegrass"</option>
+            <option value="derby"> tweets containing "Kentucky derby"</option>
+            <option value="chicken"> tweets containing "Kentucky Fried Chicken"</option>
+            <option value="bbn"> tweets containing "bbn"</option>
+            
+            
         </select>
         </label>
     </div>
@@ -138,7 +146,7 @@
         
         // initial map options, disabling pan/zoom
        var options = {
-            center: [38.2, -94],
+            center: [38.2, -88],
             zoom: 4,
             minZoom: 4,
             maxZoom: 6,
@@ -167,7 +175,13 @@
         var labels = {
             "bourbon": "bourbon",
             "kentucky": "kentucky",
-            "bluegrass": "bluegrass"   
+            "bluegrass": "bluegrass",
+            "hilbill": "hillbilly",
+            "derby": "Kentucky Derby",
+            "chicken": "Kentucky Fried Chicken",
+            "bbn": "bbn",
+            
+            
         }
         
         // AJAX call to load hexbin-level data
@@ -191,9 +205,9 @@
             drawLegend(); // draw the legend
           
             drawMap(); // draw the map
-             
-            drawInfo(); // draw the info panel
              ui();
+            drawInfo(); // draw the info panel
+             
             
             
         });
@@ -216,7 +230,7 @@
             
                 // bind a popup to layer with county-specific information
                 //console.log(props)
-                layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" </b></br>" +
+                layer.bindPopup(
                                 labels[attribute] + ": " + ((layer.feature.properties[attribute]/
                                         layer.feature.properties[norm])*100).toLocaleString());
 
@@ -307,7 +321,7 @@
         function drawLegend() {
             
             // create a new Leaflet control object, and position it top left
-            var legend = L.control({position: 'bottomleft'});
+            var legend = L.control({position: 'bottomright'});
             
             // when the legend is added to the map
             legend.onAdd = function(map) {
@@ -336,9 +350,7 @@
                 var color = getColor(breaks[i + 1], breaks);
                 
                 // append a list item to the legend
-                legend.append('<li><span style="background:' + color + '"></span> ' +
-                    (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                    (breaks[i + 1]*100).toLocaleString() + '</li>');
+                legend.append('<li><span style="background:' + color + '"></span> ' + '</li>');
             }
             
             // close the legend's unordered list
@@ -350,7 +362,7 @@
         function ui() {
          
             // create a new Leaflet control Object and assign to a variable
-            var dataView = L.control({position: 'bottomleft'});
+            var dataView = L.control({position: 'bottomright'});
             
             // when the control is added to the map
             dataView.onAdd = function(map) {
@@ -414,7 +426,7 @@
                         "# of Kentucky derby tweets: <b>"+ props["derby"]+"</b><br>"+
                         "# of kentucky fried chicken tweets: <b>"+ props["chicken"]+"</b><br>"+
                         "# of bbn tweets: <b>"+ props["bbn"]+"</b><br>"+
-                        "# of kentucky coloneltweets: <b>"+ props["colonel"]+"</b>"
+                        "# of kentucky colonel tweets: <b>"+ props["colonel"]+"</b>"
             
             // insert HTML content into empty info panel
             $(".info").html(html);
