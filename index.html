@@ -59,7 +59,7 @@
             padding: 6px 8px;
             font-size: 1em;
             color: whitesmoke;
-             background:rgba(25,25,25,0.8);
+            background:rgba(25,25,25,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
             width: 160px;
@@ -76,16 +76,16 @@
             height: 22px;
         }
         .legend span {
-            width: 30px;
-            height: 20px;
+            width: 10px;
+            height: 10px;
             float: left;
             margin-right: 10px;
         }
         #ui-controls  {
             position: absolute;
+            bottom: 170px;
             z-index: 100;
-            bottom:50px;
-            right:20px;
+            float:right;
             padding: 8px 15px;
             margin: 0;
             color: whitesmoke;
@@ -98,7 +98,7 @@
             font-weight: bold;
         }
         .info {
-            padding: 6px 8px;
+            padding: 6px 20px;
             font-size: 1em;
             background: rgba(255,255,255,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -165,9 +165,9 @@
         
         // create object to hold legend titles
         var labels = {
-            "bourbon": "# of tweets containing the word bourbon",
-            "kentucky": "# of tweets containing the word kentucky",
-            "bluegrass": "# of tweets containing the word bluegrass"   
+            "bourbon": "bourbon",
+            "kentucky": "kentucky",
+            "bluegrass": "bluegrass"   
         }
         
         // AJAX call to load hexbin-level data
@@ -179,21 +179,21 @@
                     // style counties with initial default path options
                      
                     return {
-                            color: '#dddddd',
+                            color: 'white',
                             weight: .1,
                             fillOpacity: .5,
                             fillColor: "#00FF00"
                         };
                 }          
             }).addTo(map);
-              ui();
+      
            
             drawLegend(); // draw the legend
-             ui();
+          
             drawMap(); // draw the map
              
             drawInfo(); // draw the info panel
-          
+             ui();
             
             
         });
@@ -283,7 +283,7 @@
             // and uses a series of conditional statements to determine which 
             // which color value to return to return to the function caller
             if(d == 0) {return hideStyle};
-            console.log(d);
+            //console.log(d);
            
             var hideStyle ={
         
@@ -307,7 +307,7 @@
         function drawLegend() {
             
             // create a new Leaflet control object, and position it top left
-            var legend = L.control({position: 'topleft'});
+            var legend = L.control({position: 'bottomleft'});
             
             // when the legend is added to the map
             legend.onAdd = function(map) {
@@ -350,7 +350,7 @@
         function ui() {
          
             // create a new Leaflet control Object and assign to a variable
-            var dataView = L.control({position: 'bottomright'});
+            var dataView = L.control({position: 'bottomleft'});
             
             // when the control is added to the map
             dataView.onAdd = function(map) {
@@ -365,7 +365,7 @@
             // add the control to the map
             dataView.addTo(map);
          
-            // select the dropdown elemetn and listen for a change
+            // select the dropdown element and listen for a change
             $('select[name="bourbon"]').change(function() {
                 
                 // re-assign the value based off user's selection
@@ -405,12 +405,16 @@
             // create shortcut for accessing properties
             var props = layer.feature.properties;
             
-            // build an HTML string of relevant information about that county
+            // build an HTML string of relevant information about that polygon
             var html = 
-                        "# of bourbon related tweets: <b>"+ props["bourbon"]+"</b><br>"+
-                        "# of kentucky related tweets: <b>"+ props["kentucky"]+"</b><br>"+
-                        "# of bluegrass related tweets: <b>"+ props["bluegrass"]+"</b><br>"+
-                        "# of hillbilly related tweets: <b>"+ props["hillbill"]+"</b>"
+                        "# of bourbon tweets: <b>"+ props["bourbon"]+"</b><br>"+
+                        "# of kentucky tweets: <b>"+ props["kentucky"]+"</b><br>"+
+                        "# of bluegrass  tweets: <b>"+ props["bluegrass"]+"</b><br>"+
+                        "# of hillbilly tweets: <b>"+ props["hillbill"]+"</b>"
+                        "# of Kentucky derby tweets: <b>"+ props["derby"]+"</b><br>"+
+                        "# of kentucky fried chicken tweets: <b>"+ props["chicken"]+"</b><br>"+
+                        "# of bbn tweets: <b>"+ props["bbn"]+"</b><br>"+
+                        "# of kentucky coloneltweets: <b>"+ props["colonel"]+"</b>"
             
             // insert HTML content into empty info panel
             $(".info").html(html);
