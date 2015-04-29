@@ -208,7 +208,8 @@
         });
         
         function drawMap() {
-            
+             
+         
                 // get the class breaks for the initial data attribute
                 var breaks = getClassBreaks();
 
@@ -221,9 +222,7 @@
                         fillColor: getColor(layer.feature.properties[attribute]/
                                         layer.feature.properties[norm], breaks)    
                 });
-                    
                    
-
                 // bind a popup to layer with county-specific information
                 //console.log(props)
                 layer.bindPopup(labels[attribute] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
@@ -273,6 +272,7 @@
                 props = layer.feature.properties
                 //console.log(props);
                 if(props[norm] == 0) props[norm] = 1
+            
                 var value = layer.feature.properties[attribute]/layer.feature.properties[norm];
                 values.push(+value);   // push the normalized value for each layer into the Array
                  //console.log(values)
@@ -334,7 +334,7 @@
         function updateLegend(breaks) {
             
             // select the legend, add a title, begin an unordered list and assign to a variable
-            var legend = $('.legend').html("<h3>" + labels[attribute] + "</h3><ul>"); 
+            var legend = $('.legend').html("<h3>" + "a few tweets"+ "----------------------------------lots of tweets" + "</h3><ul>"); 
 
             // loop through the Array of classification break values
             for (var i = 0; i < breaks.length-1; i++) {
