@@ -216,13 +216,23 @@
                 // loop through each polygon
                 dataLayer.eachLayer(function(layer) {
              
-                
-                // set the fill color of layer based on its normalized data value
+                // if the data attribute is not 0
+                if(layer.feature.properties[attribute] != 0) {
+                    // set the layer fill and stroke to true and colorize
                     layer.setStyle({
+                        fill: true,
+                        stroke: true,
                         fillColor: getColor(layer.feature.properties[attribute]/
-                                        layer.feature.properties[norm], breaks)    
-                });
-                   
+                                        layer.feature.properties[norm], breaks)  
+                        }) ;
+                } else {
+                    // otherwise, set fill and stroke to false
+                    layer.setStyle({
+                        fill: false,
+                        stroke: false
+                    });
+                }
+                    
                 // bind a popup to layer with county-specific information
                 //console.log(props)
                 layer.bindPopup(labels[attribute] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
