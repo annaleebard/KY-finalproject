@@ -123,7 +123,7 @@
     
     <header>
         <h1>All Things Kentucky</h1>
-        <h2>/h2>
+        <h2></h2>
     </header>
     <div id='ui-controls'>
      <label>Choose a data attribute:<br>
@@ -160,10 +160,8 @@
 	maxZoom: 16
 });
 
-      // load map tiles and add to map
-      map.addLayer(tiles); 
-        
-       
+        // load map tiles and add to map
+        map.addLayer(tiles); 
         
         // set global variables for map layer, 
         // mapped attribute, and normalizing attribute
@@ -179,9 +177,7 @@
             "hilbill": "hillbilly",
             "derby": "Kentucky Derby",
             "chicken": "Kentucky Fried Chicken",
-            "bbn": "bbn",
-            
-            
+            "bbn": "bbn"
         }
         
         // AJAX call to load hexbin-level data
@@ -190,65 +186,63 @@
             // create Leaflet data layer and add to map
             dataLayer = L.geoJson(data, {
                  style: function(feature) {
-                    // style counties with initial default path options
-                     
+                    // style hex with initial default path options
+                    //draws and styles the polygons 
                     return {
-                            color: 'white',
-                            weight: .1,
-                            fillOpacity: .5,
-                            fillColor: "#00FF00"
+                            fillColor: 'white',
+                            weight: 0,
+                            fillOpacity: 0.5,
+                            
                         };
                 }          
             }).addTo(map);
       
            
             drawLegend(); // draw the legend
-          
-            drawMap(); // draw the map
-             ui();
+           // draw the map
+            ui();
             drawInfo(); // draw the info panel
              
-            
+             drawMap(); 
             
         });
         
         function drawMap() {
             
-            // get the class breaks for the initial data attribute
-            var breaks = getClassBreaks();
+                // get the class breaks for the initial data attribute
+                var breaks = getClassBreaks();
 
-            // loop through each hexbin 
-            dataLayer.eachLayer(function(layer) {
+                // loop through each polygon
+                dataLayer.eachLayer(function(layer) {
+             
                 
                 // set the fill color of layer based on its normalized data value
-                layer.setStyle({
-                    fillColor: getColor(layer.feature.properties[attribute]/
-                                        layer.feature.properties[norm], breaks)
-                    
-                    
+                    layer.setStyle({
+                        fillColor: getColor(layer.feature.properties[attribute]/
+                                        layer.feature.properties[norm], breaks)    
                 });
-            
+                    
+                   
+
                 // bind a popup to layer with county-specific information
                 //console.log(props)
-                layer.bindPopup(
-                                labels[attribute] + ": " + ((layer.feature.properties[attribute]/
-                                        layer.feature.properties[norm])*100).toLocaleString());
+                layer.bindPopup(labels[attribute] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
 
                 // on mousing over layer
                 layer.on('mouseover', function() {
                     
-                    // update the info panel
-                    updateInfo(this); 
-                    
-                    // change the stroke color and bring that element to the front
-                    layer.setStyle({color: 'blue'}).bringToFront();  
+                // update the info panel
+                updateInfo(this); 
+                
+                // change the stroke color and bring that element to the front
+                layer.setStyle({color: 'blue'}).bringToFront();  
                 });
                 
                 // on mousing off layer
                 layer.on('mouseout', function() {
                     
-                    // reset the layer style to its original stroke color
-                    layer.setStyle({color: '#dddddd'});
+                // reset the layer style to its original stroke color
+                layer.setStyle({color: '#ffffb2', });
                 });
                 
             });  
@@ -296,16 +290,15 @@
             // function accepts a single normalized data attribute value 
             // and uses a series of conditional statements to determine which 
             // which color value to return to return to the function caller
-            if(d == 0) {return hideStyle};
-            //console.log(d);
-           
-            var hideStyle ={
-        
-                weight:0,
-            
-              fillOpacity: 0,
-          };
-            if(d <= breaks[1]) {
+//            if(d == 0) {return hideStyle};
+//            console.log(d);
+//           
+//            var hideStyle ={
+//                fillColor: false,
+//                stroke:false,
+//                fillOpacity: false,
+         
+                if(d <= breaks[1]) {
                 return '#ffffb2';
             } else if(d <= breaks[2]) {
                 return '#fecc5c';
@@ -326,11 +319,11 @@
             // when the legend is added to the map
             legend.onAdd = function(map) {
                 
-                // create a div element with an class attribute of legend
-                var div = L.DomUtil.create('div', 'legend');
+            // create a div element with an class attribute of legend
+            var div = L.DomUtil.create('div', 'legend');
                 
-                // return the div to the method
-                return div;
+            // return the div to the method
+            return div;
         
             };
             
@@ -422,7 +415,7 @@
                         "# of bourbon tweets: <b>"+ props["bourbon"]+"</b><br>"+
                         "# of kentucky tweets: <b>"+ props["kentucky"]+"</b><br>"+
                         "# of bluegrass  tweets: <b>"+ props["bluegrass"]+"</b><br>"+
-                        "# of hillbilly tweets: <b>"+ props["hillbill"]+"</b>"
+                        "# of hillbilly tweets: <b>"+ props["hillbill"]+"</b><br>"+
                         "# of Kentucky derby tweets: <b>"+ props["derby"]+"</b><br>"+
                         "# of kentucky fried chicken tweets: <b>"+ props["chicken"]+"</b><br>"+
                         "# of bbn tweets: <b>"+ props["bbn"]+"</b><br>"+
