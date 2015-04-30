@@ -62,7 +62,7 @@
             background:rgba(25,25,25,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 10px;
-            width: 300px;
+            width: 365px;
         }
         .legend h3 {
             font-size: 1.1em;
@@ -114,6 +114,8 @@
         .leaflet-popup-content {
             max-width: 120px;   
         }
+        #fr{
+            float: right}
         
         
     </style>
@@ -131,9 +133,12 @@
             <option value="bourbon" selected>tweets containing "bourbon"</option>
             <option value="kentucky">tweets containing "Kentucky"</option> 
             <option value="bluegrass">tweets containing "bluegrass"</option>
-            <option value="derby"> tweets containing "Kentucky derby"</option>
+            <option value="derby"> tweets containing "Kentucky Derby"</option>
+            <option value="hillbill"> tweets containing "Hillbilly"</option>
             <option value="chicken"> tweets containing "Kentucky Fried Chicken"</option>
             <option value="bbn"> tweets containing "bbn"</option>
+            <option value="kykicksass"> tweets containing "Kentucky Kicks Ass"</option>
+            <option value="unspirit"> tweets containing "Unbridled Spirit"</option>
             
             
         </select>
@@ -149,7 +154,7 @@
             center: [38.2, -88],
             zoom: 5,
             minZoom: 4,
-            maxZoom: 6,
+            maxZoom: 7,
             dragging: true,
             zoomControl: true
         }
@@ -173,17 +178,17 @@
         
         // create object to hold legend titles
         var labels = {
-            "bourbon": "bourbon",
-            "kentucky": "kentucky",
-            "bluegrass": "bluegrass",
-            "hilbill": "hillbilly",
+            "bourbon": "Bourbon",
+            "kentucky": "Kentucky",
+            "bluegrass": "Bluegrass",
+            "hilbill": "Hillbilly",
             "derby": "Kentucky Derby",
             "chicken": "Kentucky Fried Chicken",
-            "bbn": "bbn"
+            "bbn": "BBN"
         }
         
         // AJAX call to load hexbin-level data
-        $.getJSON("hexKY.json", function(data) {
+        $.getJSON("US_State_Tweets.json", function(data) {
             
             // create Leaflet data layer and add to map
             dataLayer = L.geoJson(data, {
@@ -192,8 +197,8 @@
                     //draws and styles the polygons 
                     return {
                             fillColor: 'white',
-                            weight: 0,
-                            fillOpacity: 0.5,
+                            weight: 1,
+                            fillOpacity: 1,
                             
                         };
                 }          
@@ -237,7 +242,7 @@
                     
                 // bind a popup to layer with county-specific information
                 //console.log(props)
-                layer.bindPopup(labels[attribute] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
+                layer.bindPopup(labels[attribute]+" tweets in " + layer.feature.properties["NAME"]+" : " +((layer.feature.properties[attribute])).toLocaleString());
 
                 // on mousing over layer
                 layer.on('mouseover', function() {
@@ -246,14 +251,14 @@
                 updateInfo(this); 
                 
                 // change the stroke color and bring that element to the front
-                layer.setStyle({color: 'blue'}).bringToFront();  
+                layer.setStyle({color: 'yellow'}).bringToFront();  
                 });
                 
                 // on mousing off layer
                 layer.on('mouseout', function() {
                     
                 // reset the layer style to its original stroke color
-                layer.setStyle({color: '#ffffb2', });
+                layer.setStyle({color: 'blue', });
                 });
                 
             });  
@@ -282,7 +287,7 @@
             // loop through all the counties
             dataLayer.eachLayer(function(layer) {
                 props = layer.feature.properties
-                //console.log(props);
+                console.log(props);
                 if(props[norm] == 0) props[norm] = 1
             
                 var value = layer.feature.properties[attribute]/layer.feature.properties[norm];
@@ -291,7 +296,7 @@
                  
             }); 
             
-            var breaks = ss.jenks(values, 5);  // determine the class breaks
+            var breaks = ss.jenks(values, 6);  // determine the class breaks
             return breaks;  // return Array of class breaks
            
             
@@ -302,14 +307,7 @@
             // function accepts a single normalized data attribute value 
             // and uses a series of conditional statements to determine which 
             // which color value to return to return to the function caller
-//            if(d == 0) {return hideStyle};
-//            console.log(d);
-//           
-//            var hideStyle ={
-//                fillColor: false,
-//                stroke:false,
-//                fillOpacity: false,
-         
+
                 if(d <= breaks[1]) {
                 return '#ffffb2';
             } else if(d <= breaks[2]) {
@@ -320,7 +318,9 @@
                 return '#f03b20'
             } else if(d <= breaks[5]) {
                 return '#bd0026'
-            }
+            } else if(d <= breaks[6]) {
+                return 'red'
+            } 
         }
         
         function drawLegend() {
@@ -346,7 +346,7 @@
         function updateLegend(breaks) {
             
             // select the legend, add a title, begin an unordered list and assign to a variable
-            var legend = $('.legend').html("<h3>" + "a few tweets"+ "----------------------------------lots of tweets" + "</h3><ul>"); 
+            var legend = $('.legend').html("<h3>" + "a few tweets" +"<span id='fr'>lots of tweets</span>" + "</h3><ul>"); 
 
             // loop through the Array of classification break values
             for (var i = 0; i < breaks.length-1; i++) {
