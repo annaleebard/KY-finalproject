@@ -147,7 +147,7 @@
     <div id='map'></div>
         
     <script>
-        
+               
         
         // initial map options, disabling pan/zoom
        var options = {
@@ -187,11 +187,30 @@
             "bbn": "BBN"
         }
         
+        //give variables to different geometry layers
+      
+        
         // AJAX call to load hexbin-level data
-        $.getJSON("US_County_Tweets.json", function(data) {
+             $.getJSON("US_County_Tweets.json", function(data) {
             
             // create Leaflet data layer and add to map
-            dataLayer = L.geoJson(data, {
+            countyLayer = L.geoJson(data, {
+                 style: function(feature) {
+                    // style hex with initial default path options
+                    //draws and styles the polygons 
+                    return {
+                            fillColor: 'white',
+                            weight: 1,
+                            fillOpacity: 1,
+                            
+                        };
+                }          
+            })
+            
+            L.control.layers({'Counties': countyLayer}).addTo(map);
+            
+             $.getJSON("US_State_Tweets.json", function(data) {
+                  stateLayer = L.geoJson(data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -203,14 +222,33 @@
                         };
                 }          
             }).addTo(map);
-      
+                
+                L.control.layers({'States': stateLayer}).addTo(map); 
+                
+                $.getJSON("hexKY.json", function(data) {
+                    hexLayer = L.geoJson (data, {
+                 style: function(feature) {
+                    // style hex with initial default path options
+                    //draws and styles the polygons 
+                    return {
+                            fillColor: 'white',
+                            weight: 1,
+                            fillOpacity: 1,
+                            
+                        };
+                }          
+            })
+                 L.control.layers(null,{'Hexbin': hexbinLayer}).addTo(map);
+                  // add this point you know for sure all three geojsons are loaded
+                })
+             })
+
            
+      
             drawLegend(); // draw the legend
-           // draw the map
             ui();
             drawInfo(); // draw the info panel
-             
-             drawMap(); 
+            drawMap(); 
             
         });
         
@@ -235,9 +273,9 @@
                 } else {
                     // otherwise, set fill and stroke to false
                     layer.setStyle({
-                        fill: true,
-                        stroke: true,
-                        fillColor: "grey",
+                        fill: false,
+                        stroke: false,
+                        fillColor: false,
                     });
                 }
                     
@@ -262,20 +300,20 @@
                 layer.setStyle({color: 'blue', });
                 });
                 
-            });  
-            
-            // when mousing over the map
-            dataLayer.on('mouseover', function() {
-                $(".info").show(); // display the info panel
-            });
-            
-            // when mousing off the map
-            dataLayer.on('mouseout', function() {
-                $(".info").hide();  // hide the info panel 
-            });
-            
-            // update the legend with the current data attribute information
-            updateLegend(breaks);
+                });  
+
+                // when mousing over the map
+                dataLayer.on('mouseover', function() {
+                    $(".info").show(); // display the info panel
+                });
+
+                // when mousing off the map
+                dataLayer.on('mouseout', function() {
+                    $(".info").hide();  // hide the info panel 
+                });
+
+                // update the legend with the current data attribute information
+                updateLegend(breaks);
             
         }
         
@@ -425,18 +463,22 @@
             
             // build an HTML string of relevant information about that polygon
             var html = 
-                        "# of bourbon tweets: <b>"+ props["bourbon"]+"</b><br>"+
-                        "# of kentucky tweets: <b>"+ props["kentucky"]+"</b><br>"+
-                        "# of bluegrass  tweets: <b>"+ props["bluegrass"]+"</b><br>"+
-                        "# of hillbilly tweets: <b>"+ props["hillbill"]+"</b><br>"+
+                        "# of Bourbon tweets: <b>"+ props["bourbon"]+"</b><br>"+
+                        "# of Kentucky tweets: <b>"+ props["kentucky"]+"</b><br>"+
+                        "# of Bluegrass  tweets: <b>"+ props["bluegrass"]+"</b><br>"+
+                        "# of Hillbilly tweets: <b>"+ props["hillbill"]+"</b><br>"+
                         "# of Kentucky derby tweets: <b>"+ props["derby"]+"</b><br>"+
-                        "# of kentucky fried chicken tweets: <b>"+ props["chicken"]+"</b><br>"+
+                        "# of Kentucky fried chicken tweets: <b>"+ props["chicken"]+"</b><br>"+
                         "# of bbn tweets: <b>"+ props["bbn"]+"</b><br>"+
-                        "# of kentucky colonel tweets: <b>"+ props["colonel"]+"</b>"
+                        "# of Kentucky Colonel tweets: <b>"+ props["colonel"]+"</b><br>"+
+                        "# of Kentucky for Kentucky tweets: <b>"+ props["ky4ky"]+"</b><br>"+
+                        "# of Kentucky Kicks Ass tweets: <b>"+ props["kykicksass"]+"</b><br>"+
+                        "# of Unbridled Spirit: <b>"+ props["unspirit"]+"</b>"
             
             // insert HTML content into empty info panel
             $(".info").html(html);
         }
+ 
 
     </script>
     
