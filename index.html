@@ -196,7 +196,7 @@
              $.getJSON("US_County_Tweets.json", function(data) {
             
             // create Leaflet data layer and add to map
-            countyLayer = L.geoJson(data, {
+            dataLayer = L.geoJson(data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -209,10 +209,10 @@
                 }          
             })
             
-            L.control.layers(null,{'Counties': countyLayer}).addTo(map);
+            L.control.layers(null,{'Counties': dataLayer}).addTo(map);
             
              $.getJSON("US_State_Tweets.json", function(data) {
-                  stateLayer = L.geoJson(data, {
+                 dataLayer = L.geoJson(data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -225,10 +225,10 @@
                 }          
             }).addTo(map);
                 
-                L.control.layers(null,{'States': stateLayer}).addTo(map); 
+                L.control.layers(null,{'States': dataLayer}).addTo(map); 
                 
                 $.getJSON("hexKY.json", function(data) {
-                    hexbinLayer = L.geoJson (data, {
+                    dataLayer = L.geoJson (data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -236,11 +236,12 @@
                             fillColor: 'white',
                             weight: 1,
                             fillOpacity: 1,
+                        
                             
                         };
                 }          
             })
-                 L.control.layers(null,{'Hexbin': hexbinLayer}).addTo(map);
+                 L.control.layers(null,{'Hexbin': dataLayer}).addTo(map);
                   // add this point you know for sure all three geojsons are loaded
                 })
              })
@@ -261,7 +262,7 @@
                 var breaks = getClassBreaks();
 
                 // loop through each polygon
-                hexbilLayer.eachLayer(function(layer) {
+                dataLayer.eachLayer(function(layer) {
              
                 // if the data attribute is not 0
                 if(layer.feature.properties[attribute] != 0) {
@@ -305,7 +306,7 @@
                 });  
 
                 // when mousing over the map
-                hexbinLayer.on('mouseover', function() {
+                dataLayer.on('mouseover', function() {
                     $(".info").show(); // display the info panel
                 });
 
@@ -326,7 +327,7 @@
             var values = [];
             
             // loop through all the counties
-            hexbinLayer.eachLayer(function(layer) {
+            dataLayer.eachLayer(function(layer) {
                 props = layer.feature.properties
                 console.log(props);
                 if(props[norm] == 0) props[norm] = 1
