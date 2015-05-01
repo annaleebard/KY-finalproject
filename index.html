@@ -188,7 +188,7 @@
         }
         
         // AJAX call to load hexbin-level data
-        $.getJSON("US_State_Tweets.json", function(data) {
+        $.getJSON("US_County_Tweets.json", function(data) {
             
             // create Leaflet data layer and add to map
             dataLayer = L.geoJson(data, {
@@ -235,14 +235,15 @@
                 } else {
                     // otherwise, set fill and stroke to false
                     layer.setStyle({
-                        fill: false,
-                        stroke: false
+                        fill: true,
+                        stroke: true,
+                        fillColor: "grey",
                     });
                 }
                     
                 // bind a popup to layer with county-specific information
                 //console.log(props)
-                layer.bindPopup(labels[attribute]+" tweets in " + layer.feature.properties["NAME"]+" : " +((layer.feature.properties[attribute])).toLocaleString());
+                layer.bindPopup(labels[attribute]+" tweets from " + layer.feature.properties["NAME"]+" : " +((layer.feature.properties[attribute])).toLocaleString());
 
                 // on mousing over layer
                 layer.on('mouseover', function() {
