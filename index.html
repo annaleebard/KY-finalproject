@@ -172,9 +172,10 @@
         
         // set global variables for map layer, 
         // mapped attribute, and normalizing attribute
-        var countyLayer;
-        var hexbinLayer;
-        var stateLayer;
+        var dataLayer;
+//            countyLayer;
+//            hexbinLayer;
+//            stateLayer;
             attribute = "bourbon",
             norm = "norm";
         
@@ -196,7 +197,7 @@
              $.getJSON("US_County_Tweets.json", function(data) {
             
             // create Leaflet data layer and add to map
-            dataLayer = L.geoJson(data, {
+            countyLayer = L.geoJson(data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -209,10 +210,10 @@
                 }          
             })
             
-            L.control.layers(null,{'Counties': dataLayer}).addTo(map);
+            L.control.layers(null,{'Counties': countyLayer}).addTo(map);
             
              $.getJSON("US_State_Tweets.json", function(data) {
-                 dataLayer = L.geoJson(data, {
+                  stateLayer = L.geoJson(data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -225,10 +226,10 @@
                 }          
             }).addTo(map);
                 
-                L.control.layers(null,{'States': dataLayer}).addTo(map); 
+                L.control.layers(null,{'States': stateLayer}).addTo(map); 
                 
                 $.getJSON("hexKY.json", function(data) {
-                    dataLayer = L.geoJson (data, {
+                    hexbinLayer = L.geoJson (data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -241,7 +242,7 @@
                         };
                 }          
             })
-                 L.control.layers(null,{'Hexbin': dataLayer}).addTo(map);
+                 L.control.layers(null,{'Hexbin': hexbinLayer}).addTo(map);
                   // add this point you know for sure all three geojsons are loaded
                 })
              })
