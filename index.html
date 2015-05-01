@@ -172,7 +172,9 @@
         
         // set global variables for map layer, 
         // mapped attribute, and normalizing attribute
-        var dataLayer,
+        var countyLayer;
+        var hexbinLayer;
+        var stateLayer;
             attribute = "bourbon",
             norm = "norm";
         
@@ -207,7 +209,7 @@
                 }          
             })
             
-            L.control.layers({'Counties': countyLayer}).addTo(map);
+            L.control.layers(null,{'Counties': countyLayer}).addTo(map);
             
              $.getJSON("US_State_Tweets.json", function(data) {
                   stateLayer = L.geoJson(data, {
@@ -223,10 +225,10 @@
                 }          
             }).addTo(map);
                 
-                L.control.layers({'States': stateLayer}).addTo(map); 
+                L.control.layers(null,{'States': stateLayer}).addTo(map); 
                 
                 $.getJSON("hexKY.json", function(data) {
-                    hexLayer = L.geoJson (data, {
+                    hexbinLayer = L.geoJson (data, {
                  style: function(feature) {
                     // style hex with initial default path options
                     //draws and styles the polygons 
@@ -259,7 +261,7 @@
                 var breaks = getClassBreaks();
 
                 // loop through each polygon
-                dataLayer.eachLayer(function(layer) {
+                hexbilLayer.eachLayer(function(layer) {
              
                 // if the data attribute is not 0
                 if(layer.feature.properties[attribute] != 0) {
@@ -303,7 +305,7 @@
                 });  
 
                 // when mousing over the map
-                dataLayer.on('mouseover', function() {
+                hexbinLayer.on('mouseover', function() {
                     $(".info").show(); // display the info panel
                 });
 
@@ -324,7 +326,7 @@
             var values = [];
             
             // loop through all the counties
-            dataLayer.eachLayer(function(layer) {
+            hexbinLayer.eachLayer(function(layer) {
                 props = layer.feature.properties
                 console.log(props);
                 if(props[norm] == 0) props[norm] = 1
