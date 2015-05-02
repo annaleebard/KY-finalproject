@@ -183,10 +183,9 @@
 
         // set global variables for map layer, 
         // mapped attribute, and normalizing attribute
-        var dataLayer;
-        //            countyLayer;
-        //            hexbinLayer;
-        //            stateLayer;
+        var countyLayer;
+        var  hexbinLayer;
+        var  stateLayer;
         attribute = "bourbon",
             norm = "norm";
 
@@ -245,6 +244,7 @@
                 $.getJSON("hexKY.json", function (data) {
                     hexbinLayer = L.geoJson(data, {
                         style: function (feature) {
+                            
                             // style hex with initial default path options
                             //draws and styles the polygons 
                             return {
@@ -293,7 +293,9 @@
             l.eachLayer(function (layer) {
 
                 // if the data attribute is not 0
-                if (layer.feature.properties[attribute] != 0) {
+               // if (activeLayer == hexbinLayer)
+                { 
+                     if (layer.feature.properties[attribute] != 0) {
                     // set the layer fill and stroke to true and colorize
                     layer.setStyle({
                         fill: true,
@@ -309,7 +311,25 @@
                         fillColor: false,
                     });
                 }
+                }
+//                if(activeLayer != hexbinLayer) {
+//                    layer.setStyle({
+//                        fill:true,
+//                        stroke:true,
+//                        fillColor: getColor(layer.feature.properties[attribute] /
+//                            layer.feature.properties[norm], breaks)
+//                    });
+                        
+                    
+                    
+                   
+                
+                
+                
 
+                
+                
+                
                 // bind a popup to layer with county-specific information
                 //console.log(props)
                 layer.bindPopup(labels[attribute] + " tweets from " + layer.feature.properties["NAME"] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
@@ -369,7 +389,7 @@
 
             });
 
-            var breaks = ss.jenks(values, 6); // determine the class breaks
+            var breaks = ss.jenks(values, 5); // determine the class breaks
             return breaks; // return Array of class breaks
 
 
@@ -384,17 +404,15 @@
             // which color value to return to return to the function caller
 
             if (d <= breaks[1]) {
-                return '#eff3ff';
+                return '#a1d99b';
             } else if (d <= breaks[2]) {
-                return '#c6dbef';
+                return '#74c476';
             } else if (d <= breaks[3]) {
-                return '#9ecae1';
+                return '#41ab5d';
             } else if (d <= breaks[4]) {
-                return '#6baed6'
+                return '#238b45'
             } else if (d <= breaks[5]) {
-                return '#3182bd'
-            }  else if (d <= breaks[5]) {
-                return '#08519c'
+                return '#005a32'
             } 
         }
 
