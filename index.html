@@ -184,8 +184,8 @@
         // set global variables for map layer, 
         // mapped attribute, and normalizing attribute
         var countyLayer;
-        var  hexbinLayer;
-        var  stateLayer;
+        var hexbinLayer;
+        var stateLayer;
         attribute = "bourbon",
             norm = "norm";
 
@@ -216,8 +216,8 @@
                     //draws and styles the polygons 
                     return {
                         fillColor: 'white',
-                        weight: .5,
-                        fillOpacity: .8,
+                        weight: .7,
+                        fillOpacity: 1,
 
                     };
                 }
@@ -294,6 +294,13 @@
 
                 // if the data attribute is not 0
                // if (activeLayer == hexbinLayer)
+                
+                 layer.setStyle({
+                        fill: activeLayer == hexbinLayer ? false : true ,
+                        stroke: false,
+                        fillColor: 'gray',
+                    });
+
                 { 
                      if (layer.feature.properties[attribute] != 0) {
                     // set the layer fill and stroke to true and colorize
@@ -312,6 +319,9 @@
                     });
                 }
                 }
+                
+               
+                        
 //                if(activeLayer != hexbinLayer) {
 //                    layer.setStyle({
 //                        fill:true,
@@ -320,15 +330,6 @@
 //                            layer.feature.properties[norm], breaks)
 //                    });
                         
-                    
-                    
-                   
-                
-                
-                
-
-                
-                
                 
                 // bind a popup to layer with county-specific information
                 //console.log(props)
