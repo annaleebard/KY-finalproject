@@ -68,7 +68,7 @@
             background: rgba(25, 25, 25, 0.8);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
-            width: 365px;
+            width: 425px;
         }
         
         .legend h3 {
@@ -82,7 +82,7 @@
         .legend li {
             list-style-type: none;
             display: inline;
-            height: 20px;
+            height: 15px;
         }
         
         .legend span {
@@ -101,7 +101,7 @@
             padding: 3px 3px;
             margin: 1px;
             color: whitesmoke;
-            fontsize: 2em;
+            fontsize: 3em;
             background: rgba(25, 25, 25, 0.8);
             border-radius: 5px;
         }
@@ -131,6 +131,9 @@
         #fr {
             float: right
         }
+         #frl {
+            float: left
+        }
     </style>
 </head>
 
@@ -144,15 +147,16 @@
         <label>Choose a data attribute:
             <br>
             <select name="bourbon">
-                <option value="bourbon" selected>tweets containing "bourbon"</option>
+                <option value="bourbon" selected>tweets containing "Bourbon"</option>
                 <option value="kentucky">tweets containing "Kentucky"</option>
-                <option value="bluegrass">tweets containing "bluegrass"</option>
+                <option value="bluegrass">tweets containing "Bluegrass"</option>
                 <option value="derby"> tweets containing "Kentucky Derby"</option>
                 <option value="hillbill"> tweets containing "Hillbilly"</option>
                 <option value="chicken"> tweets containing "Kentucky Fried Chicken"</option>
-                <option value="bbn"> tweets containing "bbn"</option>
+                <option value="BBN"> tweets containing "bbn"</option>
                 <option value="kykicksass"> tweets containing "Kentucky Kicks Ass"</option>
                 <option value="unspirit"> tweets containing "Unbridled Spirit"</option>
+                <option value="ky4ky"> tweets containing "Kentucky for Kentucky"</option>
 
 
             </select>
@@ -197,7 +201,11 @@
             "hilbill": "Hillbilly",
             "derby": "Kentucky Derby",
             "chicken": "Kentucky Fried Chicken",
-            "bbn": "BBN"
+            "bbn": "BBN",
+            "unspirit": "Unbridled Spirit",
+            "kykicksass" : "Kentucky Kicks Ass",
+            "ku4ky" : "Kentucky for Kentucky"
+            
         }
 
         //give variables to different geometry layers
@@ -218,6 +226,7 @@
                         fillColor: 'white',
                         weight: .7,
                         fillOpacity: 1,
+                        stroke: "black",
 
                     };
                 }
@@ -234,6 +243,7 @@
                             fillColor: 'white',
                             weight: 2,
                             fillOpacity: .8,
+                            
 
                         };
                     }
@@ -241,7 +251,7 @@
 
                 layerToggle['States'] = stateLayer
 
-                $.getJSON("hexKY.json", function (data) {
+                $.getJSON("hex504.json", function (data) {
                     hexbinLayer = L.geoJson(data, {
                         style: function (feature) {
                             
@@ -294,13 +304,7 @@
 
                 // if the data attribute is not 0
                // if (activeLayer == hexbinLayer)
-                
-                 layer.setStyle({
-                        fill: activeLayer == hexbinLayer ? false : true ,
-                        stroke: false,
-                        fillColor: 'gray',
-                    });
-
+               
                 { 
                      if (layer.feature.properties[attribute] != 0) {
                     // set the layer fill and stroke to true and colorize
@@ -313,9 +317,9 @@
                 } else {
                     // otherwise, set fill and stroke to false
                     layer.setStyle({
-                        fill: false,
+                        fill: activeLayer == hexbinLayer ? false : true ,
                         stroke: false,
-                        fillColor: false,
+                        fillColor: 'gray',
                     });
                 }
                 }
@@ -333,7 +337,21 @@
                 
                 // bind a popup to layer with county-specific information
                 //console.log(props)
-                layer.bindPopup(labels[attribute] + " tweets from " + layer.feature.properties["NAME"] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
+                //console.log(activeLayer);
+                
+                //create conditional statements to customize popups for each layer
+                if (activeLayer == hexbinLayer) {
+                  layer.bindPopup(labels[attribute]  +" tweets from this hexagon"+ " : " + ((layer.feature.properties[attribute])).toLocaleString());
+                } else if(activeLayer == countyLayer) {
+                    layer.bindPopup(labels[attribute] + " tweets from " + layer.feature.properties["NAME"] + " County : " + ((layer.feature.properties[attribute])).toLocaleString());
+                } else  {
+                    layer.bindPopup(labels[attribute] + " tweets from " + layer.feature.properties["NAME"] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
+                }
+                
+
+                    
+                    
+//                layer.bindPopup(labels[attribute] + " tweets from " + layer.feature.properties["NAME"] + " : " + ((layer.feature.properties[attribute])).toLocaleString());
 
                 // on mousing over layer
                 layer.on('mouseover', function () {
@@ -442,7 +460,7 @@
         function updateLegend(breaks) {
 
             // select the legend, add a title, begin an unordered list and assign to a variable
-            var legend = $('.legend').html("<h3>" + "a few tweets" + "<span id='fr'>lots of tweets</span>" + "</h3><ul>");
+            var legend = $('.legend').html("<h3>" +  "<span id='frl'>a few tweets</span>" + "<span id='fr'>lots of tweets</span>" + "</h3><ul>");
 
             // loop through the Array of classification break values
             for (var i = 0; i < breaks.length - 1; i++) {
@@ -527,14 +545,14 @@
                 "# of Bourbon tweets: <b>" + props["bourbon"] + "</b><br>" +
                 "# of Kentucky tweets: <b>" + props["kentucky"] + "</b><br>" +
                 "# of Bluegrass  tweets: <b>" + props["bluegrass"] + "</b><br>" +
-                "# of Hillbilly tweets: <b>" + props["hillbill"] + "</b><br>" +
                 "# of Kentucky derby tweets: <b>" + props["derby"] + "</b><br>" +
+                "# of Hillbilly tweets: <b>" + props["hillbill"] + "</b><br>" +
                 "# of Kentucky fried chicken tweets: <b>" + props["chicken"] + "</b><br>" +
-                "# of bbn tweets: <b>" + props["bbn"] + "</b><br>" +
+                "# of BBN tweets: <b>" + props["bbn"] + "</b><br>" +
                 "# of Kentucky Colonel tweets: <b>" + props["colonel"] + "</b><br>" +
-                "# of Kentucky for Kentucky tweets: <b>" + props["ky4ky"] + "</b><br>" +
                 "# of Kentucky Kicks Ass tweets: <b>" + props["kykicksass"] + "</b><br>" +
-                "# of Unbridled Spirit: <b>" + props["unspirit"] + "</b>"
+                "# of Unbridled Spirit tweets: <b>" + props["unspirit"] + "</b><br>" +
+                "# of Kentucky for Kentucky tweets: <b>" + props["ky4ky"] + "</b>"
 
             // insert HTML content into empty info panel
             $(".info").html(html);
