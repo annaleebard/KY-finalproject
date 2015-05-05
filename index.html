@@ -153,7 +153,7 @@
                 <option value="derby"> tweets containing "Kentucky Derby"</option>
                 <option value="hillbill"> tweets containing "Hillbilly"</option>
                 <option value="chicken"> tweets containing "Kentucky Fried Chicken"</option>
-                <option value="BBN"> tweets containing "bbn"</option>
+                <option value="bbn"> tweets containing "BBN"</option>
                 <option value="kykicksass"> tweets containing "Kentucky Kicks Ass"</option>
                 <option value="unspirit"> tweets containing "Unbridled Spirit"</option>
                 <option value="ky4ky"> tweets containing "Kentucky for Kentucky"</option>
@@ -302,29 +302,36 @@
             // loop through each polygon
             l.eachLayer(function (layer) {
 
-                // if the data attribute is not 0
-               // if (activeLayer == hexbinLayer)
                
-                { 
-                     if (layer.feature.properties[attribute] != 0) {
+                {
+                    if (layer.feature.properties[attribute] != 0 ) {
                     // set the layer fill and stroke to true and colorize
                     layer.setStyle({
                         fill: true,
                         stroke: true,
                         fillColor: getColor(layer.feature.properties[attribute] /
                             layer.feature.properties[norm], breaks)
+                        
                     });
-                } else {
-                    // otherwise, set fill and stroke to false
+                        
+                } else if ((activeLayer ==hexbinLayer) && (layer.feature.properties[attribute] == 0))  {
                     layer.setStyle({
-                        fill: activeLayer == hexbinLayer ? false : true ,
+                        fill: false,
                         stroke: false,
-                        fillColor: 'gray',
                     });
-                }
+                }   
+                    else {
+                    layer.setStyle({
+                        fill: true, 
+                        stroke: true,
+                        fillColor: 'gray',
+                        
+                     }); 
+                    
+                } 
                 }
                 
-               
+     
                         
 //                if(activeLayer != hexbinLayer) {
 //                    layer.setStyle({
@@ -373,8 +380,8 @@
                         color: 'blue',
                     });
                 });
-
             });
+
 
             // when mousing over the map
             l.on('mouseover', function () {
