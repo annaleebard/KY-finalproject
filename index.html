@@ -240,7 +240,7 @@
 
             layerToggle['Counties'] = countyLayer
 
-            $.getJSON("US_State_Tweets.json", function (data) {
+            $.getJSON("US_State_Tweets506.json", function (data) {
                 stateLayer = L.geoJson(data, {
                     style: function (feature) {
                         // style hex with initial default path options
@@ -362,22 +362,40 @@
                     // change the stroke color and bring that element to the front
                     layer.setStyle({
                         fill: 'yellow',
-                        stroke: true,
+                        stroke: false,
                         fillColor: "#ff0033",
-                        color: 'yellow'
+                        
                     }).bringToFront();
                 });
 
                 // on mousing off layer
                 layer.on('mouseout', function () {
 
-                    // reset the layer style to its original stroke color
-                    layer.setStyle({
-                        color: 'blue',
-                        fillColor:  getColor(layer.feature.properties[attribute] /
+                   {
+                    if (layer.feature.properties[attribute] != 0) {
+                        // set the layer fill and stroke to true and colorize
+                        layer.setStyle({
+                            fill: true,
+                            stroke: true,
+                            fillColor: getColor(layer.feature.properties[attribute] /
                                 layer.feature.properties[norm], breaks)
-                        
-                    });
+
+                        });
+
+                    } else if ((activeLayer == hexbinLayer) && (layer.feature.properties[attribute] == 0)) {
+                        layer.setStyle({
+                            fill: false,
+                            stroke: false,
+                        });
+                    } else {
+                        layer.setStyle({
+                            fill: true,
+                            stroke: true,
+                            fillColor: 'black',
+
+                        });
+                    }
+                }
                 });
             });
 
